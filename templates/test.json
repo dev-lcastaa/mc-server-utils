@@ -1,0 +1,9 @@
+{
+    "target_ec2": "i-08cd7660e8b2aa29c",
+    "target_elastic_ip": "eipalloc-0b1d3a04235bc517a",
+    "association_id": "eipassoc-04578d31794ea8b93",
+    "public_ip": "13.57.76.155",
+    "rcon_pass": "6612340935",
+    "rcon_port": 25575,
+    "ram": 10
+}
