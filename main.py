@@ -9,9 +9,9 @@ utils.check_for_mcrcon()
 
 # Main Menu Logic
 printer.print_menu_header('Main Menu')
-main_options = ['Start Server', 'Stop Server', 'Launch Configurations']
+main_options = ['Launch Server', 'Stop Server', 'Configuration Menu']
 printer.print_options(main_options)
-choice = printer.prompt_for_selection('Make your selection')
+choice = printer.prompt_for_selection('Your choice ->')
 if choice == 1:
     print()
     manager.launch_sequence()

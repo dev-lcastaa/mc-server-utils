@@ -1,11 +1,12 @@
 import subprocess
 import os
 import json
+import printer
 
 
 # Checks for AWS CLI is installed
 def check_for_aws_cli():
-    print("----------[Checking for AWS CLI]----------")
+    printer.print_menu_header('Checking for AWS CLI')
     cmd = ['aws', '--version']
     name = 'AWS CLI'
     check_for_dependency(cmd, name)
@@ -13,7 +14,7 @@ def check_for_aws_cli():
 
 # Checks to see if MC RCON is installed
 def check_for_mcrcon():
-    print('----------[Checking for MC RCON]----------')
+    printer.print_menu_header('Checking for MC RCON')
     cmd = ['pip', 'show', 'mcrcon']
     name = 'MCRCON'
     check_for_dependency(cmd, name)
@@ -52,14 +53,18 @@ def run_command(command):
         return None
 
 
-# Runs an AWS CLI CMD to return EC2 Instance IDs
+# Runs an AWS CLI CMD to return a list of EC2 Instance IDs
 def return_list_of_ec2():
-    os.system('aws ec2 describe-instances --query "Reservations[*].Instances[*].InstanceId" --output text')
+    result = os.popen('aws ec2 describe-instances --query "Reservations[*].Instances[*].InstanceId" --output text')
+    list_of_ec2 = result.read().split('\n')
+    return list_of_ec2
 
 
 # Runs an AWS CLI CMD to return ELASTIC IP Allocation IDs
 def return_list_of_elastic_ip():
-    os.system('aws ec2 describe-addresses --query "Addresses[*].AllocationId" --output text')
+    result = os.popen('aws ec2 describe-addresses --query "Addresses[*].AllocationId" --output text')
+    list_of_elastic_ip = result.read().split('\n')
+    return list_of_elastic_ip
 
 
 # Checks to see if a file exists
@@ -90,12 +95,9 @@ def dump_to_file(data, filename):
 
         file_path = os.path.join(templates_dir, filename)
 
-        print(f"Full file path: {file_path}")
-
         with open(file_path, 'w') as file:
             json.dump(data, file, indent=4)
             file.flush()
-            print(f"Data has been dumped to {file_path}")
 
     except Exception as e:
         print(f"An error occurred: {e}")
