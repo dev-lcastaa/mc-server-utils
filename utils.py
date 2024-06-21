@@ -1,11 +1,12 @@
 import subprocess
 import os
 import json
+import printer
 
 
 # Checks for AWS CLI is installed
 def check_for_aws_cli():
-    print("----------[Checking for AWS CLI]----------")
+    printer.print_menu_header('Checking for AWS CLI')
     cmd = ['aws', '--version']
     name = 'AWS CLI'
     check_for_dependency(cmd, name)
@@ -13,7 +14,7 @@ def check_for_aws_cli():
 
 # Checks to see if MC RCON is installed
 def check_for_mcrcon():
-    print('----------[Checking for MC RCON]----------')
+    printer.print_menu_header('Checking for MC RCON')
     cmd = ['pip', 'show', 'mcrcon']
     name = 'MCRCON'
     check_for_dependency(cmd, name)
