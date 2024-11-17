@@ -21,7 +21,7 @@ def launch_sequence():
     print()
     print("Selected ->: " + template)
     print()
-    options = ['LAUNCH Server', 'ABORT Launch', 'EXIT']
+    options = ['Start Server', 'Abort Start', 'Send Command','EXIT']
     printer.print_options(options)
     choice = printer.prompt_for_selection('Your Choice ->')
     os.chdir(root_dir)
@@ -29,9 +29,10 @@ def launch_sequence():
         start_server(template)
     elif choice == 2:
         launch_sequence()
+    elif choice == 3:
+        send_command(template)
     else:
         exit(2)
-
 
 def abort():
     print()
@@ -50,7 +51,6 @@ def abort():
     print("Stopping server using template")
     print()
     stop_server(template)
-
 
 def start_server(template):
     data = utils.return_config_param(template)
@@ -81,9 +81,15 @@ def start_server(template):
     print('Waiting for server to initialize...it can be 1 minute..please wait..')
     sleep(75)
     ram_size = str(data['ram'])
-    launch_cmd = f'commands=["cd /home/admin/", "screen -dms minecraft java -Xmx{ram_size}G -jar server.jar nogui", "echo \\"Server started\\""]'
-    cmd = ['aws', 'ssm', 'send-command', '--instance-ids', data['target_ec2'], '--document-name',
-           'AWS-RunShellScript', '--comment', 'Launch Minecraft Server', '--parameters', launch_cmd]
+    runner = data['runner']
+    if runner == "forge":
+        launch_cmd = f'commands=["cd /home/admin/", "screen -dms minecraft sudo bash run.sh", "echo \\"Server started\\""]'
+        cmd = ['aws', 'ssm', 'send-command', '--instance-ids', data['target_ec2'], '--document-name',
+               'AWS-RunShellScript', '--comment', 'Launch Minecraft Server', '--parameters', launch_cmd]
+    else:
+        launch_cmd = f'commands=["cd /home/admin/", "screen -dms minecraft java -Xmx{ram_size}G -jar server.jar nogui", "echo \\"Server started\\""]'
+        cmd = ['aws', 'ssm', 'send-command', '--instance-ids', data['target_ec2'], '--document-name',
+               'AWS-RunShellScript', '--comment', 'Launch Minecraft Server', '--parameters', launch_cmd]
     utils.run_command_and_capture_output(cmd)
     print()
     print('Minecraft server successfully started...')
@@ -103,12 +109,29 @@ def start_server(template):
         "public_ip": data['public_ip'],
         "rcon_pass": data['rcon_pass'],
         "rcon_port": data['rcon_port'],
-        "ram": data['ram']
+        "ram": data['ram'],
+        "runner": data['runner']
     }
     utils.dump_to_file(new_data, template)
     print('Saved the association id to template: ' + template + '...')
     print()
     printer.print_menu_header('Server was successfully started')
+
+# allow the sending of commands to a running server
+def send_command(template):
+    print()
+    command_to_send = printer.prompt_for_input('Enter CMD to Send: ')
+
+    # offloads template data to variables to use with f''
+    data = utils.return_config_param(template)
+    rcon_pass = data['rcon_pass']
+    ip_address = data['public_ip']
+
+    save_mc_server_cmd = (f'mcrcon-nsg -H {ip_address} -p {rcon_pass} {command_to_send}')
+    os.system(save_mc_server_cmd)
+
+
+
 
 
 # Uses a launch configuration to stop the server

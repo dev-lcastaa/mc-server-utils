@@ -2,7 +2,6 @@ import json
 
 import printer
 import utils
-import os
 
 
 # Configuration Menu Selection
@@ -23,7 +22,6 @@ def launch_config():
         delete()
     else:
         exit(2)
-
 
 # Allows you to create a new template
 def create():
@@ -72,6 +70,10 @@ def create():
     ram = int(printer.prompt_for_input('Run with GB of RAM->'))
     print()
 
+    # Prompts for Mod loader runner type
+    runner = printer.prompt_for_input('Mod Loader type ->')
+    print()
+
     # Prints a summary of the configuration
     printer.print_menu_header('Summary')
     print(f'target_ec2: {target_ec2}')
@@ -80,6 +82,7 @@ def create():
     print(f'rcon_pass: {rcon_pass}')
     print(f'rcon_port: {rcon_port}')
     print(f'ram: {ram}')
+    print(f'runner: {runner}')
 
     # Saves Template or Aborts
     print()
@@ -96,7 +99,8 @@ def create():
             "public_ip": public_ip,
             "rcon_pass": rcon_pass,
             "rcon_port": rcon_port,
-            "ram": ram
+            "ram": ram,
+            "runner" : runner
         }
         utils.dump_to_file(data, name)
     elif select == 2:
@@ -104,11 +108,9 @@ def create():
     else:
         exit(2)
 
-
 # Allows you to edit templates
 def edit():
     pass
-
 
 # Allows you to delete templates
 def delete():
