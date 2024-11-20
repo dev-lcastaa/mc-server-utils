@@ -21,7 +21,7 @@ def launch_sequence():
     print()
     print("Selected ->: " + template)
     print()
-    options = ['Start Server', 'Abort Start', 'Send Command','EXIT']
+    options = ['Start Server', 'Stop Server', 'Send Command', 'EXIT']
     printer.print_options(options)
     choice = printer.prompt_for_selection('Your Choice ->')
     os.chdir(root_dir)
@@ -147,8 +147,7 @@ def stop_server(template):
 
     # Saves the server using an RCON CMD
     printer.print_menu_header('Saving minecraft server')
-    save_mc_server_cmd = (f'echo "save-all" | mcrcon {ip_address} --password '
-                          f'{rcon_pass} --port {rcon_port} > /dev/null 2>&1')
+    save_mc_server_cmd = f'mcrcon-nsg -H {ip_address} -p {rcon_pass} save-all'
     os.system(save_mc_server_cmd)
     sleep(10)
     print('Saved Minecraft server state..')
