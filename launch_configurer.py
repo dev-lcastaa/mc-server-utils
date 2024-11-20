@@ -9,7 +9,7 @@ import os
 def launch_config():
     utils.check_for_config_dir("templates")
     printer.print_menu_header('Config Menu')
-    options = ['Create launch template', 'Edit launch template', 'Delete launch template']
+    options = ['Create launch template', 'Edit launch template', 'Delete launch template', 'EXIT']
     printer.print_options(options)
     choice = printer.prompt_for_selection('Your choice ->')
     if choice == 1:
@@ -104,6 +104,7 @@ def create():
             "runner" : runner
         }
         utils.dump_to_file(data, name)
+        launch_config()
     elif select == 2:
         launch_config()
     else:
@@ -139,6 +140,7 @@ def delete():
         os.remove(template)
         print()
         print("Template deleted successfully!")
+        launch_config()
         os.chdir(root_dir)
     elif choice == 2:
         launch_config()
