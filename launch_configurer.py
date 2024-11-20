@@ -2,6 +2,7 @@ import json
 
 import printer
 import utils
+import os
 
 
 # Configuration Menu Selection
@@ -114,4 +115,32 @@ def edit():
 
 # Allows you to delete templates
 def delete():
-    pass
+    print()
+    root_dir = os.path.dirname(os.path.abspath(__file__))
+    printer.print_menu_header('Select template to delete.')
+    files = utils.get_launch_templates()
+    template = 0
+    choice = 0
+    printer.print_options(files)
+    while choice == 0 or choice > len(files):
+        choice = printer.prompt_for_selection("Choose a template")
+    template = files[choice - 1]
+    print()
+    print("You chose: " + template)
+    choice = 0
+    options = ['Confirm delete', 'Abort delete']
+    printer.print_options(options)
+    while choice == 0:
+        choice = printer.prompt_for_selection("Are you sure you want to delete?")
+    if choice == 1:
+        root_dir = os.path.dirname(os.path.abspath(__file__))
+        directory = 'templates'
+        os.chdir(directory)
+        os.remove(template)
+        print()
+        print("Template deleted successfully!")
+        os.chdir(root_dir)
+    elif choice == 2:
+        launch_config()
+    else:
+        exit(2)

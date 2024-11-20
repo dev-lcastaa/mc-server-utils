@@ -86,6 +86,9 @@ def start_server(template):
         launch_cmd = f'commands=["cd /home/admin/", "screen -dms minecraft sudo bash run.sh", "echo \\"Server started\\""]'
         cmd = ['aws', 'ssm', 'send-command', '--instance-ids', data['target_ec2'], '--document-name',
                'AWS-RunShellScript', '--comment', 'Launch Minecraft Server', '--parameters', launch_cmd]
+    elif runner == "neoforge":
+        print("feature yet to be implemented")
+        exit(1)
     else:
         launch_cmd = f'commands=["cd /home/admin/", "screen -dms minecraft java -Xmx{ram_size}G -jar server.jar nogui", "echo \\"Server started\\""]'
         cmd = ['aws', 'ssm', 'send-command', '--instance-ids', data['target_ec2'], '--document-name',
