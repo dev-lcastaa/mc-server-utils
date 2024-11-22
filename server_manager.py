@@ -28,7 +28,7 @@ def launch_sequence():
     if choice == 1:
         start_server(template)
     elif choice == 2:
-        launch_sequence()
+        stop_server(template)
     elif choice == 3:
         send_command(template)
     else:
